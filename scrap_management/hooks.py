@@ -1,7 +1,7 @@
 app_name = "scrap_management"
 app_title = "Scrap Management"
 app_publisher = "Khan Anish"
-app_description = "Scrap Management App"
+app_description = "Scrap Management"
 app_email = "ka2955159@gmail.com"
 app_license = "mit"
 

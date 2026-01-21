@@ -3,7 +3,7 @@ name = "scrap_management"
 authors = [
     { name = "Khan Anish", email = "ka2955159@gmail.com"}
 ]
-description = "Scrap Management App"
+description = "Scrap Management"
 requires-python = ">=3.14"
 readme = "README.md"
 dynamic = ["version"]

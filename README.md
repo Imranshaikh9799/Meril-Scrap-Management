@@ -1,6 +1,6 @@
 ### Scrap Management
 
-Scrap Management App
+Scrap Management
 
 ### Installation
 
