@@ -1,0 +1,259 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-29 15:31:47.627296",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_hijy",
+  "declare_by",
+  "checked_by_production_full_name",
+  "checked_by_production_user_id",
+  "checked_by_production_date",
+  "column_break_mzq0",
+  "checked_by_quality_controlquality_assurance_name",
+  "checked_by_quality_controlquality_assurance_full_name",
+  "checked_by_quality_controlquality_assurance_user_id",
+  "checked_by_quality_controlquality_assurance_date",
+  "column_break_yn5i",
+  "reviewed_by_production_name",
+  "reviewed_by_production_full_name",
+  "reviewed_by_production_user_id",
+  "reviewed_by_production_date",
+  "column_break_cmo2",
+  "reviewed_by_quality_controlquality_assurance_name",
+  "reviewed_by_quality_controlquality_assurance_full_name",
+  "reviewed_by_quality_controlquality_assurance_user_id",
+  "reviewed_by_quality_controlquality_assurance_date",
+  "column_break_3qu8",
+  "approved_by_quality_assurance_name",
+  "approved_by_quality_assurance_full_name",
+  "approved_by_quality_assurance_user_id",
+  "approved_by_quality_assurance_date",
+  "column_break_kreo",
+  "scrap_incharge_name",
+  "scrap_incharge_full_name",
+  "scrap_incharge_user_id",
+  "scrap_incharge_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "checked_by_production_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Declare By Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "fieldname": "checked_by_production_user_id",
+   "fieldtype": "Data",
+   "label": "Declare By User ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "checked_by_production_date",
+   "fieldtype": "Date",
+   "label": "Declare By Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_mzq0",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "checked_by_quality_controlquality_assurance_name",
+   "fieldtype": "Link",
+   "label": "HOD",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "checked_by_quality_controlquality_assurance_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "HOD Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "fieldname": "checked_by_quality_controlquality_assurance_user_id",
+   "fieldtype": "Data",
+   "label": "HOD User ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "checked_by_quality_controlquality_assurance_date",
+   "fieldtype": "Date",
+   "label": "HOD Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yn5i",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_production_name",
+   "fieldtype": "Link",
+   "label": "QA/QC Name",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_production_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "QA/QC Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_production_user_id",
+   "fieldtype": "Data",
+   "label": "QA/QC User Id",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_production_date",
+   "fieldtype": "Date",
+   "label": "QA/QC Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cmo2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_quality_controlquality_assurance_name",
+   "fieldtype": "Link",
+   "label": "PPIC Name",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_quality_controlquality_assurance_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "PPIC Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_quality_controlquality_assurance_user_id",
+   "fieldtype": "Data",
+   "label": "PPIC User id",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reviewed_by_quality_controlquality_assurance_date",
+   "fieldtype": "Date",
+   "label": "PPIC Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3qu8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approved_by_quality_assurance_name",
+   "fieldtype": "Link",
+   "label": "Finance HOD Name",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approved_by_quality_assurance_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Finance HOD Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approved_by_quality_assurance_user_id",
+   "fieldtype": "Data",
+   "label": "Finance HOD User ID",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approved_by_quality_assurance_date",
+   "fieldtype": "Date",
+   "label": "Finance HOD Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_hijy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "declare_by",
+   "fieldtype": "Link",
+   "label": "Declare By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kreo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "scrap_incharge_name",
+   "fieldtype": "Link",
+   "label": "Scrap Incharge Name",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "scrap_incharge_full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Scrap Incharge Full Name",
+   "read_only": 1,
+   "width": "1"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "scrap_incharge_user_id",
+   "fieldtype": "Data",
+   "label": "Scrap Incharge User ID",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "scrap_incharge_date",
+   "fieldtype": "Date",
+   "label": "Scrap Incharge Date",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-29 15:54:50.669179",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "BMR Record CheckList Approval Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

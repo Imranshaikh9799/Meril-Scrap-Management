@@ -1,0 +1,203 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-21 12:50:44.213398",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company_name",
+  "date_addf",
+  "department",
+  "scrap_type",
+  "workflow_remarks",
+  "column_break_ufwx",
+  "cost_center",
+  "place",
+  "sub_department",
+  "particulars",
+  "prefix",
+  "section_break_onjh",
+  "upload_documents",
+  "check",
+  "section_break_ascf",
+  "table",
+  "section_break_sges",
+  "asset_details",
+  "section_break_zlye",
+  "approval_details",
+  "section_break_buzj",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Link",
+   "label": "Company Name",
+   "options": "Company Master",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date_addf",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "cost_center.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scrap_type",
+   "fieldtype": "Link",
+   "label": "Scrap Type",
+   "link_filters": "[[\"Scrap Types\",\"name\",\"!=\",\"Fixed Asset\"]]",
+   "options": "Scrap Types",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_ufwx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.company_name\n",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center Master",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "place",
+   "fieldtype": "Data",
+   "label": "Place"
+  },
+  {
+   "fetch_from": "cost_center.sub_department",
+   "fieldname": "sub_department",
+   "fieldtype": "Data",
+   "label": "Sub Department",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.scrap_type\n",
+   "fieldname": "particulars",
+   "fieldtype": "Link",
+   "label": "Particulars",
+   "mandatory_depends_on": "eval:doc.scrap_type",
+   "options": "Scrap Particulars",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "section_break_onjh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "upload_documents",
+   "fieldtype": "Attach",
+   "label": "Upload Documents"
+  },
+  {
+   "default": "0",
+   "fieldname": "check",
+   "fieldtype": "Check",
+   "label": "Check",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "section_break_ascf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 8,
+   "fieldname": "table",
+   "fieldtype": "Table",
+   "label": "Scrap Details",
+   "options": "Scrap Details"
+  },
+  {
+   "fieldname": "section_break_buzj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Scrap Declaration List",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "company_name.prefix",
+   "fieldname": "prefix",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "prefix",
+   "options": "Company Master"
+  },
+  {
+   "fieldname": "section_break_zlye",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "approval_details",
+   "fieldtype": "Table",
+   "options": "Approval Details",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_sges",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "asset_details",
+   "fieldtype": "Table",
+   "options": "Asset Details"
+  },
+  {
+   "fieldname": "workflow_remarks",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Workflow remarks"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-02-12 15:36:32.256371",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Scrap Declaration List",
+ "naming_rule": "By script",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

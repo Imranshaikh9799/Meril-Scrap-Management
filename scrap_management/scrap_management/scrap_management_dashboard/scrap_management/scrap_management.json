@@ -1,0 +1,25 @@
+{
+ "cards": [
+  {
+   "card": "Holidays in this month"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Scrap Declaration List",
+   "width": "Full"
+  }
+ ],
+ "creation": "2026-02-02 15:30:24.676796",
+ "dashboard_name": "Scrap Management",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 1,
+ "is_standard": 1,
+ "modified": "2026-02-02 17:14:30.552653",
+ "modified_by": "xyzabc6266@gmail.com",
+ "module": "Scrap Management",
+ "name": "Scrap Management",
+ "owner": "admin@gmail.com"
+}

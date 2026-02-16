@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-21 12:50:24.129817",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "original_item_material_code",
+  "scrap_item_material_code",
+  "product_description",
+  "column_break_fmti",
+  "uom",
+  "approx_qty",
+  "actual_qty",
+  "remark_by_scrap_incharge",
+  "column_break_nche",
+  "reason_for_generation",
+  "scrap_classification",
+  "remarks_if_any"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "original_item_material_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Original Item Material Code",
+   "options": "Item",
+   "set_only_once": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "scrap_item_material_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Scrap Item Material Code",
+   "options": "Item",
+   "set_only_once": 1
+  },
+  {
+   "columns": 4,
+   "fetch_from": "scrap_item_material_code.item_name",
+   "fieldname": "product_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Product Description"
+  },
+  {
+   "fieldname": "column_break_fmti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "fetch_from": "scrap_item_material_code.stock_uom",
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM",
+   "set_only_once": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "approx_qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Approx Qty",
+   "set_only_once": 1
+  },
+  {
+   "columns": 3,
+   "fetch_from": "scrap_item_material_code.custom_scrap_classification",
+   "fieldname": "scrap_classification",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Scrap Classification",
+   "options": "Scrap Classification Master"
+  },
+  {
+   "fieldname": "column_break_nche",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 4,
+   "fieldname": "reason_for_generation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reason for Generation",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "remarks_if_any",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Remarks (if any)"
+  },
+  {
+   "columns": 2,
+   "fieldname": "actual_qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Actual Qty"
+  },
+  {
+   "fieldname": "remark_by_scrap_incharge",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Remark By Scrap Incharge"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-05 11:08:49.133503",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Scrap Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

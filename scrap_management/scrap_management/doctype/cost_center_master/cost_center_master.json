@@ -1,0 +1,204 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{cost_center_code}",
+ "creation": "2026-01-21 12:49:38.068518",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company_section",
+  "company_name",
+  "column_break_ynpj",
+  "company",
+  "section_break_dzji",
+  "cost_center_name",
+  "column_break_qomf",
+  "cost_center_code",
+  "section_break_mpnt",
+  "department",
+  "sub_department",
+  "column_break_efxz",
+  "place",
+  "section_break_doch",
+  "table_pjgs",
+  "section_break_yefo",
+  "fixed",
+  "table_jrcs",
+  "section_break_imjd",
+  "declare_by",
+  "hod",
+  "ppic",
+  "column_break_jatb",
+  "qaqc",
+  "finance_hod",
+  "scrap_incharge"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_section",
+   "fieldtype": "Section Break",
+   "label": "Company"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Link",
+   "label": "Company Name ",
+   "options": "Company Master"
+  },
+  {
+   "fieldname": "column_break_ynpj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "company_name.company_code",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dzji",
+   "fieldtype": "Section Break",
+   "label": "Cost Center"
+  },
+  {
+   "fieldname": "cost_center_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cost Center Name"
+  },
+  {
+   "fieldname": "column_break_qomf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cost_center_code",
+   "fieldtype": "Data",
+   "label": "Cost Center Code",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_mpnt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "sub_department",
+   "fieldtype": "Link",
+   "label": "Sub Department",
+   "options": "Sub Department"
+  },
+  {
+   "fieldname": "column_break_efxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "place",
+   "fieldtype": "Link",
+   "label": "Place",
+   "options": "Place"
+  },
+  {
+   "fieldname": "section_break_imjd",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "declare_by",
+   "fieldtype": "Link",
+   "label": "Declare By",
+   "options": "Role"
+  },
+  {
+   "fieldname": "hod",
+   "fieldtype": "Table MultiSelect",
+   "label": "HOD",
+   "options": "Employee Details"
+  },
+  {
+   "fieldname": "ppic",
+   "fieldtype": "Table MultiSelect",
+   "label": "PPIC",
+   "options": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_jatb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qaqc",
+   "fieldtype": "Table MultiSelect",
+   "label": "QA/QC",
+   "options": "Employee Details"
+  },
+  {
+   "fieldname": "finance_hod",
+   "fieldtype": "Table MultiSelect",
+   "label": "Finance HOD",
+   "options": "Employee Details"
+  },
+  {
+   "fieldname": "scrap_incharge",
+   "fieldtype": "Table MultiSelect",
+   "label": "Scrap Incharge",
+   "options": "Employee Details"
+  },
+  {
+   "fieldname": "section_break_doch",
+   "fieldtype": "Section Break",
+   "label": "Regular Scrap / Other than Regular Scrap"
+  },
+  {
+   "fieldname": "table_pjgs",
+   "fieldtype": "Table",
+   "options": "Approval"
+  },
+  {
+   "fieldname": "section_break_yefo",
+   "fieldtype": "Section Break",
+   "label": "Fixed Asset"
+  },
+  {
+   "fieldname": "fixed",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "table_jrcs",
+   "fieldtype": "Table",
+   "options": "Approval"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-11 14:17:36.849161",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Cost Center Master",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
