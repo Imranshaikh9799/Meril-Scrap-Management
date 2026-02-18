@@ -18,6 +18,8 @@
   "sub_department",
   "particulars",
   "prefix",
+  "section_break_xqzb",
+  "table_euwy",
   "section_break_sges",
   "asset_details",
   "section_break_zlye",
@@ -149,13 +151,22 @@
    "fieldtype": "Link",
    "label": "Usable type",
    "options": "Usable type"
+  },
+  {
+   "fieldname": "section_break_xqzb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_euwy",
+   "fieldtype": "Table",
+   "options": "Asset Table Add Row"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-16 10:04:37.213501",
+ "modified": "2026-02-17 14:18:42.039770",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Fixed Asset Inactive List",
