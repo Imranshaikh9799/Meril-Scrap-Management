@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-02-18 14:57:48.381335",
+ "creation": "2026-02-18 14:20:30.740239",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -23,6 +23,14 @@
   "remarks"
  ],
  "fields": [
+  {
+   "fieldname": "column_break_fmti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nche",
+   "fieldtype": "Column Break"
+  },
   {
    "fieldname": "asset_code",
    "fieldtype": "Link",
@@ -49,10 +57,6 @@
    "label": "Images"
   },
   {
-   "fieldname": "column_break_fmti",
-   "fieldtype": "Column Break"
-  },
-  {
    "fetch_from": "asset_code.item_name",
    "fieldname": "asset_description",
    "fieldtype": "Data",
@@ -77,10 +81,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Capitalization Date"
-  },
-  {
-   "fieldname": "column_break_nche",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "asset_qty",
@@ -116,10 +116,10 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-18 14:57:48.381335",
+ "modified": "2026-02-18 14:42:59.555812",
  "modified_by": "Administrator",
  "module": "Scrap Management",
- "name": "Asset Details",
+ "name": "Scrap Details-1",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

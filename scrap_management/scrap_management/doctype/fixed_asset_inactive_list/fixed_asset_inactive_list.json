@@ -18,9 +18,9 @@
   "sub_department",
   "particulars",
   "prefix",
-  "section_break_xqzb",
-  "table_euwy",
-  "section_break_sges",
+  "section_break_tauw",
+  "table_shjf",
+  "section_break_mrfa",
   "asset_details",
   "section_break_zlye",
   "approval_details",
@@ -100,10 +100,6 @@
    "options": "Company Master"
   },
   {
-   "fieldname": "section_break_sges",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "asset_details",
    "fieldtype": "Table",
    "options": "Asset Details"
@@ -153,20 +149,24 @@
    "options": "Usable type"
   },
   {
-   "fieldname": "section_break_xqzb",
+   "fieldname": "section_break_tauw",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "table_euwy",
+   "fieldname": "table_shjf",
    "fieldtype": "Table",
    "options": "Asset Table Add Row"
+  },
+  {
+   "fieldname": "section_break_mrfa",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-17 14:18:42.039770",
+ "modified": "2026-02-18 15:32:05.461909",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Fixed Asset Inactive List",

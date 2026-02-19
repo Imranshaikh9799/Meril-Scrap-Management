@@ -251,7 +251,14 @@ app_license = "mit"
 # ignore_translatable_strings_from = []
 
 doc_events = {
+
+    # Existing Scrap Workflow
     "Scrap Declaration List": {
         "on_update": "scrap_management.workflow_email.send_workflow_email"
+    },
+
+    # ✅ NEW Fixed Asset Workflow
+    "Fixed Asset Inactive List": {
+        "on_update": "scrap_management.fixed_asset_workflow_email.send_fixed_asset_workflow_email"
     }
 }

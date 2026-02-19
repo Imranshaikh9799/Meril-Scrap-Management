@@ -220,3 +220,138 @@ function apply_particulars_filter(frm) {
 //         dialog.show();
 //     }
 // });
+
+
+frappe.ui.form.on('Asset Details', {
+
+    upload_images: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        new frappe.ui.FileUploader({
+            doctype: frm.doc.doctype,
+            docname: frm.doc.name,
+            multiple: true,
+
+            on_success: function(file) {
+
+                let images = [];
+
+                if (row.images) {
+                    try {
+                        images = JSON.parse(row.images);
+                    } catch (e) {
+                        images = [];
+                    }
+                }
+
+                images.push(file.file_url);
+                row.images = JSON.stringify(images);
+
+                frm.refresh_field("asset_details");
+
+                setTimeout(() => {
+                    render_images(frm, row);
+                }, 300);
+            }
+        });
+    },
+
+    form_render: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        setTimeout(() => {
+            render_images(frm, row);
+        }, 300);
+    }
+});
+
+
+
+function render_images(frm, row) {
+
+    let images = [];
+
+    if (row.images) {
+        try {
+            images = JSON.parse(row.images);
+        } catch (e) {
+            images = [];
+        }
+    }
+
+    let html = "";
+
+    images.forEach((img, index) => {
+        html += `
+            <div style="margin-bottom:8px;">
+                <a href="${img}" target="_blank">${img}</a>
+                <span 
+                    style="margin-left:10px; cursor:pointer; color:red;"
+                    onclick="remove_image('${row.name}', ${index})">
+                    ❌ Remove
+                </span>
+            </div>
+        `;
+    });
+
+    // 🔥 Direct DOM update (works properly inside child row)
+    let field = frm.fields_dict["asset_details"]
+        .grid.grid_rows_by_docname[row.name]
+        .grid_form.fields_dict["image_preview"];
+
+    if (field) {
+        field.$wrapper.html(html);
+    }
+}
+
+
+
+window.remove_image = function(rowname, index) {
+
+    let row = locals["Asset Details"][rowname];
+
+    let images = JSON.parse(row.images || "[]");
+
+    images.splice(index, 1);
+
+    row.images = JSON.stringify(images);
+
+    cur_frm.refresh_field("asset_details");
+
+    setTimeout(() => {
+        render_images(cur_frm, row);
+    }, 300);
+}
+
+
+
+
+frappe.ui.form.on('Asset Table Add Row', {
+
+    asset_qty: function(frm, cdt, cdn) {
+
+        // Pehle neeche wali table pura clear karo
+        frm.clear_table('asset_details');
+
+        // Upar wali table ki sab rows loop karo
+        (frm.doc.table_shjf || []).forEach(function(row) {
+
+            if (!row.asset_code || !row.asset_qty) return;
+
+            for (let i = 0; i < row.asset_qty; i++) {
+
+                let child = frm.add_child('asset_details');
+
+                child.asset_code = row.asset_code;
+                child.asset_description = row.asset_description;
+                child.asset_qty = 1;
+            }
+        });
+
+        frm.refresh_field('asset_details');
+    }
+
+});
+
+
+
