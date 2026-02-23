@@ -258,7 +258,8 @@ doc_events = {
     },
 
     # ✅ NEW Fixed Asset Workflow
-    "Fixed Asset Inactive List": {
-        "on_update": "scrap_management.fixed_asset_workflow_email.send_fixed_asset_workflow_email"
-    }
+"Fixed Asset Inactive List": {
+     "on_update": "scrap_management.fixed_asset_workflow_email.send_fixed_asset_workflow_email"
+    
+}
 }

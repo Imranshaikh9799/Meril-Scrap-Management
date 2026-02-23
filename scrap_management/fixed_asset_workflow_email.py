@@ -10,32 +10,155 @@ from frappe.utils import get_url_to_form
 
 def send_fixed_asset_workflow_email(doc, method=None):
 
-    # Stop if Draft
-    if doc.workflow_state == "Draft":
+    if not doc.workflow_state:
         return
 
-    # Avoid duplicate trigger
     before = doc.get_doc_before_save()
-    if before and before.workflow_state == doc.workflow_state:
+
+    # Trigger only if state changed
+    if not before or before.workflow_state == doc.workflow_state:
         return
 
-    recipients = [doc.owner]
-    subject = f"Fixed Asset Declaration {doc.name} - {doc.workflow_state}"
+    # 🔴 REJECT → Back to Draft
+    if doc.workflow_state == "Draft":
+        handle_rejection(doc)
+        return
 
-    send_email(recipients, subject, doc)
+    # 🟢 FINAL SUBMITTED
+    if doc.workflow_state == "Submitted":
+        handle_final_submission(doc)
+        return
+
+    # 🟡 Pending Approval States
+    if "Pending" in doc.workflow_state:
+        approval_type = extract_approval_type(doc.workflow_state)
+        recipients = get_cost_center_users(doc, approval_type)
+
+        if recipients:
+            subject = f"Fixed Asset Declaration {doc.name} - {doc.workflow_state}"
+            send_email(recipients, subject, doc)
 
 
 # =========================================================
-# EMAIL FUNCTION (BASE64 INLINE + ATTACHMENTS)
+# HANDLE REJECTION
+# =========================================================
+
+def handle_rejection(doc):
+
+    recipients = set()
+
+    if doc.owner:
+        recipients.add(doc.owner)
+
+    if hasattr(doc, "approval_details") and doc.approval_details:
+        for row in doc.approval_details:
+            if row.approved_rejected == "Approved":
+                user_email = frappe.db.get_value(
+                    "User",
+                    {"full_name": row.approved_by},
+                    "name"
+                )
+                if user_email:
+                    recipients.add(user_email)
+
+    if recipients:
+        subject = f"Fixed Asset Declaration {doc.name} - Rejected"
+        send_email(list(recipients), subject, doc)
+
+
+# =========================================================
+# HANDLE FINAL SUBMISSION
+# =========================================================
+
+def handle_final_submission(doc):
+
+    recipients = set()
+
+    if doc.owner:
+        recipients.add(doc.owner)
+
+    if hasattr(doc, "approval_details") and doc.approval_details:
+        for row in doc.approval_details:
+            if row.approved_rejected == "Approved":
+                user_email = frappe.db.get_value(
+                    "User",
+                    {"full_name": row.approved_by},
+                    "name"
+                )
+                if user_email:
+                    recipients.add(user_email)
+
+    if recipients:
+        subject = f"Fixed Asset Declaration {doc.name} - Fully Approved"
+        send_email(list(recipients), subject, doc)
+
+
+# =========================================================
+# Extract Approval Type
+# =========================================================
+
+def extract_approval_type(state):
+    if "from" in state:
+        return state.split("from")[-1].strip()
+    return state
+
+
+# =========================================================
+# Get Cost Center Users
+# =========================================================
+
+def get_cost_center_users(doc, approval_type):
+
+    if not doc.cost_center:
+        return []
+
+    approvals = frappe.get_all(
+        "Approval",
+        filters={
+            "parent": doc.cost_center,
+            "parenttype": "Cost Center Master",
+            "approval_type": approval_type,
+        },
+        fields=["employee_name", "role_enable", "role"],
+    )
+
+    users = set()
+
+    for row in approvals:
+
+        if not row.role_enable and row.employee_name:
+            user_id = frappe.db.get_value(
+                "Employee", row.employee_name, "user_id"
+            )
+            if user_id:
+                users.add(user_id)
+
+        elif row.role_enable and row.role:
+            role_users = frappe.get_all(
+                "Employee",
+                filters={
+                    "custom_role": row.role,
+                    "user_id": ["is", "set"],
+                },
+                pluck="user_id",
+            )
+            users.update(role_users)
+
+    return list(users)
+
+
+# =========================================================
+# EMAIL FUNCTION
 # =========================================================
 
 def send_email(recipients, subject, doc):
 
+    if not recipients:
+        return
+
     doc_url = get_url_to_form(doc.doctype, doc.name)
 
-    # -------------------------------------------------
-    # Dynamic Heading
-    # -------------------------------------------------
+    # ---------------- Subheading ----------------
 
     sub_heading = ""
 
@@ -49,52 +172,53 @@ def send_email(recipients, subject, doc):
         elif doc.particulars.startswith("Part 4"):
             sub_heading = "IT & Other Department Instruments and Equipments"
 
-    # -------------------------------------------------
-    # LOGO (BASE64 EMBED)
-    # -------------------------------------------------
+    # ---------------- Logo ----------------
 
     logo_html = ""
-
     try:
         logo_file = frappe.get_doc("File", {"file_url": "/files/logo.png"})
         logo_content = logo_file.get_content()
         logo_base64 = base64.b64encode(logo_content).decode("utf-8")
-
-        logo_html = f"""
-        <img src="data:image/png;base64,{logo_base64}" height="60">
-        """
+        logo_html = f'<img src="data:image/png;base64,{logo_base64}" height="60"><br><br>'
     except Exception:
         pass
 
     attachments = []
 
-    # -------------------------------------------------
-    # START HTML
-    # -------------------------------------------------
+# ---------------- Attach Child Table Images ----------------
+
+    if hasattr(doc, "asset_details") and doc.asset_details:
+     for row in doc.asset_details:
+        if row.images:
+            try:
+                image_list = json.loads(row.images)
+
+                for file_url in image_list:
+                    file_doc = frappe.get_doc("File", {"file_url": file_url})
+
+                    attachments.append({
+                        "fname": file_doc.file_name,
+                        "fcontent": file_doc.get_content()
+                    })
+
+            except Exception:
+                pass
+
+    # ---------------- Email Start ----------------
 
     message = f"""
     <div style="font-family:Arial; font-size:13px;">
-
-    <table width="100%">
-        <tr>
-            <td style="font-weight:bold;">SOP-MG-IA-MFANR</td>
-            <td style="text-align:right;">
-                {logo_html}
-            </td>
-        </tr>
-    </table>
-
-    <div style="text-align:center; font-size:18px; font-weight:bold; margin-top:10px;">
-        Declaration for Fixed Asset working condition and usefulness
-        <br>{sub_heading}
+    <div style="text-align:center;">
+        {logo_html}
+        <div style="font-size:18px; font-weight:bold;">
+            Declaration for Fixed Asset working condition and usefulness
+        </div>
+        <div>{sub_heading}</div>
     </div>
-
     <br>
     """
 
-    # -------------------------------------------------
-    # DOCUMENT INFO
-    # -------------------------------------------------
+    # ---------------- Document Info ----------------
 
     message += f"""
     <table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
@@ -117,19 +241,15 @@ def send_email(recipients, subject, doc):
             <td>{doc.place or ""}</td>
         </tr>
     </table>
-
     <br>
     """
 
-    # -------------------------------------------------
-    # ASSET TABLE
-    # -------------------------------------------------
+    # ---------------- Asset Table ----------------
 
     message += """
     <b>Asset Details</b>
     <table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
         <tr>
-            <th>Images</th>
             <th>Asset Code</th>
             <th>Description</th>
             <th>Qty</th>
@@ -139,44 +259,10 @@ def send_email(recipients, subject, doc):
         </tr>
     """
 
-    if hasattr(doc, "asset_details"):
-
+    if hasattr(doc, "asset_details") and doc.asset_details:
         for row in doc.asset_details:
-
-            image_html = ""
-
-            if row.images:
-                try:
-                    images = json.loads(row.images)
-
-                    for img in images:
-
-                        file_doc = frappe.get_doc("File", {"file_url": img})
-
-                        if file_doc:
-
-                            file_content = file_doc.get_content()
-
-                            encoded = base64.b64encode(file_content).decode("utf-8")
-
-                            image_html += f"""
-                            <img src="data:image/png;base64,{encoded}"
-                                 height="70"
-                                 style="margin:2px;">
-                            """
-
-                            # Also attach image
-                            attachments.append({
-                                "fname": file_doc.file_name,
-                                "fcontent": file_content
-                            })
-
-                except Exception:
-                    pass
-
             message += f"""
             <tr>
-                <td>{image_html}</td>
                 <td>{row.asset_code or ""}</td>
                 <td>{row.asset_description or ""}</td>
                 <td>{row.asset_qty or ""}</td>
@@ -186,25 +272,50 @@ def send_email(recipients, subject, doc):
             </tr>
             """
 
-    message += f"""
+    # ✅ Close table AFTER loop
+    message += """
     </table>
-
-    <br>
-
-    <b>Internal Assessment</b>
-    <table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
-        <tr>
-            <td><b>Condition</b></td>
-            <td>{doc.usable_type or ""}</td>
-        </tr>
-        <tr>
-            <td><b>Workflow Status</b></td>
-            <td>{doc.workflow_state or ""}</td>
-        </tr>
-    </table>
-
     <br><br>
+    """
+    # ---------------- Approval Details Table ----------------
 
+    message += """
+<b>Approval Details</b>
+<table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
+    <tr>
+        <th>Stage Name</th>
+        <th>Email Id</th>
+        <th>Remarks</th>
+    </tr>
+"""
+
+    if hasattr(doc, "approval_details") and doc.approval_details:
+     for row in doc.approval_details:
+
+        # Get user email from full name
+        user_email = ""
+        if row.approved_by:
+            user_email = frappe.db.get_value(
+                "User",
+                {"full_name": row.approved_by},
+                "name"
+            ) or ""
+
+        message += f"""
+        <tr>
+            <td>{row.stages or ""}</td>
+            <td>{user_email}</td>
+            <td>{row.remarks or ""}</td>
+        </tr>
+        """
+
+     message += """
+</table>
+<br><br>
+"""
+    # ---------------- Button ----------------
+
+    message += f"""
     <div style="text-align:center;">
         <a href="{doc_url}"
            style="padding:12px 18px;background:#2490ef;color:#fff;
@@ -212,13 +323,8 @@ def send_email(recipients, subject, doc):
            Open Document
         </a>
     </div>
-
     </div>
     """
-
-    # -------------------------------------------------
-    # SEND MAIL
-    # -------------------------------------------------
 
     frappe.sendmail(
         recipients=recipients,
