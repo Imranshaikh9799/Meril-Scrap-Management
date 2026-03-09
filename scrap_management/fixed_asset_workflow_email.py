@@ -263,12 +263,12 @@ def send_email(recipients, subject, doc):
         for row in doc.asset_details:
             message += f"""
             <tr>
-                <td>{row.asset_code or ""}</td>
-                <td>{row.asset_description or ""}</td>
-                <td>{row.asset_qty or ""}</td>
-                <td>{row.asset_location or ""}</td>
-                <td>{row.asset_tag_no or ""}</td>
-                <td>{row.reason or ""}</td>
+                <td style="text-align:center;">{row.asset_code or ""}</td>
+                <td style="text-align:center;">{row.asset_description or ""}</td>
+                <td style="text-align:center;">{row.asset_qty or ""}</td>
+                <td style="text-align:center;">{row.asset_location or ""}</td>
+                <td style="text-align:center;">{row.asset_tag_no or ""}</td>
+                <td style="text-align:center;">{row.reason or ""}</td>
             </tr>
             """
 
@@ -303,9 +303,9 @@ def send_email(recipients, subject, doc):
 
         message += f"""
         <tr>
-            <td>{row.stages or ""}</td>
-            <td>{user_email}</td>
-            <td>{row.remarks or ""}</td>
+            <td style="text-align:center;">{row.stages or ""}</td>
+            <td style="text-align:center;">{user_email}</td>
+            <td style="text-align:center;">{row.remarks or ""}</td>
         </tr>
         """
 
