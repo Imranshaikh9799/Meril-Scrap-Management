@@ -12,7 +12,9 @@
   "column_break_yjvx",
   "company_pan_no",
   "company_gstin",
-  "prefix"
+  "prefix",
+  "section_break_fytt",
+  "table_jrcs"
  ],
  "fields": [
   {
@@ -50,13 +52,22 @@
    "fieldname": "prefix",
    "fieldtype": "Data",
    "label": "Prefix"
+  },
+  {
+   "fieldname": "section_break_fytt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_jrcs",
+   "fieldtype": "Table",
+   "options": "Approval"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-04 17:40:26.132637",
- "modified_by": "admin@gmail.com",
+ "modified": "2026-03-11 16:45:22.471358",
+ "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Company Master",
  "naming_rule": "Expression (old style)",

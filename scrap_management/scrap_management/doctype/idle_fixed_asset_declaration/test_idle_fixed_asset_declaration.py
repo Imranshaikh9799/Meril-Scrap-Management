@@ -13,9 +13,9 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestScrapDeclarationList(IntegrationTestCase):
+class IntegrationTestIdleFixedAssetDeclaration(IntegrationTestCase):
 	"""
-	Integration tests for ScrapDeclarationList.
+	Integration tests for IdleFixedAssetDeclaration.
 	Use this class for testing interactions between multiple components.
 	"""
 

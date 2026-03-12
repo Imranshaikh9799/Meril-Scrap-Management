@@ -1,27 +1,26 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2026-01-21 12:50:44.213398",
+ "creation": "2026-02-12 14:58:52.733900",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "company_name",
   "date_addf",
   "department",
-  "scrap_type",
   "workflow_remarks",
+  "scrap_type",
+  "type_of_fixed_assest",
+  "usable_type",
   "column_break_ufwx",
   "cost_center",
   "place",
   "sub_department",
   "particulars",
   "prefix",
-  "section_break_onjh",
-  "upload_documents",
-  "check",
-  "section_break_ascf",
-  "table",
-  "section_break_sges",
+  "section_break_tauw",
+  "table_shjf",
+  "section_break_mrfa",
   "asset_details",
   "section_break_zlye",
   "approval_details",
@@ -53,13 +52,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "scrap_type",
-   "fieldtype": "Link",
-   "label": "Scrap Type",
-   "link_filters": "[[\"Scrap Types\",\"name\",\"!=\",\"Fixed Asset\"]]",
-   "options": "Scrap Types",
-   "reqd": 1,
-   "set_only_once": 1
+   "fieldname": "workflow_remarks",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Workflow remarks"
   },
   {
    "fieldname": "column_break_ufwx",
@@ -87,7 +83,6 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.scrap_type\n",
    "fieldname": "particulars",
    "fieldtype": "Link",
    "label": "Particulars",
@@ -97,53 +92,17 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "section_break_onjh",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "upload_documents",
-   "fieldtype": "Attach",
-   "label": "Upload Documents"
-  },
-  {
-   "default": "0",
-   "fieldname": "check",
-   "fieldtype": "Check",
-   "label": "Check",
-   "set_only_once": 1
-  },
-  {
-   "fieldname": "section_break_ascf",
-   "fieldtype": "Section Break"
-  },
-  {
-   "columns": 8,
-   "fieldname": "table",
-   "fieldtype": "Table",
-   "label": "Scrap Details",
-   "options": "Scrap Details"
-  },
-  {
-   "fieldname": "section_break_buzj",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Scrap Declaration List",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fetch_from": "company_name.prefix",
    "fieldname": "prefix",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "prefix",
    "options": "Company Master"
+  },
+  {
+   "fieldname": "asset_details",
+   "fieldtype": "Table",
+   "options": "Asset Details"
   },
   {
    "fieldname": "section_break_zlye",
@@ -156,29 +115,62 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_sges",
+   "fieldname": "section_break_buzj",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "asset_details",
-   "fieldtype": "Table",
-   "options": "Asset Details"
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Idle Fixed Asset Declaration",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   },
   {
-   "fieldname": "workflow_remarks",
-   "fieldtype": "Data",
+   "default": "Fixed Asset",
+   "fieldname": "scrap_type",
+   "fieldtype": "Link",
    "hidden": 1,
-   "label": "Workflow remarks"
+   "label": "Scrap Type",
+   "options": "Scrap Types"
+  },
+  {
+   "fieldname": "type_of_fixed_assest",
+   "fieldtype": "Link",
+   "label": "Type of Fixed Assest ",
+   "options": "Type of Fixed Asset"
+  },
+  {
+   "fieldname": "usable_type",
+   "fieldtype": "Link",
+   "label": "Usable type",
+   "options": "Usable type"
+  },
+  {
+   "fieldname": "section_break_tauw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_shjf",
+   "fieldtype": "Table",
+   "options": "Asset Table Add Row",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_mrfa",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-12 15:36:32.256371",
+ "modified": "2026-03-12 14:38:00.280698",
  "modified_by": "Administrator",
  "module": "Scrap Management",
- "name": "Scrap Declaration List",
+ "name": "Idle Fixed Asset Declaration",
  "naming_rule": "By script",
  "owner": "Administrator",
  "permissions": [

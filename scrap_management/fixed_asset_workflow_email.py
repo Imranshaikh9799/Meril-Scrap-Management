@@ -107,41 +107,112 @@ def extract_approval_type(state):
 # Get Cost Center Users
 # =========================================================
 
+# def get_cost_center_users(doc, approval_type):
+
+#     if not doc.cost_center:
+#         return []
+
+#     approvals = frappe.get_all(
+#         "Approval",
+#         filters={
+#             "parent": doc.cost_center,
+#             "parenttype": "Cost Center Master",
+#             "approval_type": approval_type,
+#         },
+#         fields=["employee_name", "role_enable", "role"],
+#     )
+
+#     users = set()
+
+#     for row in approvals:
+
+#         if not row.role_enable and row.employee_name:
+#             user_id = frappe.db.get_value(
+#                 "Employee", row.employee_name, "user_id"
+#             )
+#             if user_id:
+#                 users.add(user_id)
+
+#         elif row.role_enable and row.role:
+#             role_users = frappe.get_all(
+#                 "Employee",
+#                 filters={
+#                     "custom_role": row.role,
+#                     "user_id": ["is", "set"],
+#                 },
+#                 pluck="user_id",
+#             )
+#             users.update(role_users)
+
+#     return list(users)
+
 def get_cost_center_users(doc, approval_type):
-
-    if not doc.cost_center:
-        return []
-
-    approvals = frappe.get_all(
-        "Approval",
-        filters={
-            "parent": doc.cost_center,
-            "parenttype": "Cost Center Master",
-            "approval_type": approval_type,
-        },
-        fields=["employee_name", "role_enable", "role"],
-    )
 
     users = set()
 
+    # ---------------------------------------------
+    # HOD → From Cost Center Master
+    # ---------------------------------------------
+    if approval_type == "HOD":
+
+        if not doc.cost_center:
+            return []
+
+        approvals = frappe.get_all(
+            "Approval",
+            filters={
+                "parent": doc.cost_center,
+                "parenttype": "Cost Center Master",
+                "approval_type": approval_type,
+            },
+            fields=["employee_name", "role_enable", "role"],
+        )
+
+    # ---------------------------------------------
+    # Other Approvals → From Company Master
+    # ---------------------------------------------
+    else:
+
+        if not doc.company_name:
+            return []
+
+        approvals = frappe.get_all(
+            "Approval",
+            filters={
+                "parent": doc.company_name,
+                "parenttype": "Company Master",
+                "approval_type": approval_type,
+            },
+            fields=["employee_name", "role_enable", "role"],
+        )
+
+    # ---------------------------------------------
+    # Resolve Users
+    # ---------------------------------------------
     for row in approvals:
 
+        # Employee Based
         if not row.role_enable and row.employee_name:
+
             user_id = frappe.db.get_value(
                 "Employee", row.employee_name, "user_id"
             )
+
             if user_id:
                 users.add(user_id)
 
+        # Role Based
         elif row.role_enable and row.role:
+
             role_users = frappe.get_all(
                 "Employee",
                 filters={
                     "custom_role": row.role,
                     "user_id": ["is", "set"],
                 },
-                pluck="user_id",
+                pluck="user_id",    
             )
+
             users.update(role_users)
 
     return list(users)

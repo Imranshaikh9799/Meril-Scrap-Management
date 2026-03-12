@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import getdate, nowdate, now_datetime
 
-class FixedAssetInactiveList(Document):
+class IdleFixedAssetDeclaration(Document):
     
     def before_save(self):
 
@@ -101,7 +101,7 @@ def update_approval_remarks(docname, remarks, action):
     if not remarks:
         frappe.throw("Remarks is mandatory")
 
-    doc = frappe.get_doc("Fixed Asset Inactive List", docname)
+    doc = frappe.get_doc("Idle Fixed Asset Declaration", docname)
 
     full_name = frappe.db.get_value(
         "User", frappe.session.user, "full_name"
@@ -121,6 +121,10 @@ def update_approval_remarks(docname, remarks, action):
             "Approval Pending from R&D Assessment Team": "R&D Assessment Team",
             "Approval Pending from R&D Assessment HOD": "R&D Assessment HOD",
             "Approval Pending from Assessment Team": "Assessment Team",
+            "Approval Pending from IT Assessment Team": "Assessment Team",
+            "Approval Pending from IT Assessment HOD": "Assessment HOD",  
+            "Approval Pending from Civil Assessment Team": "Assessment Team",
+            "Approval Pending from Civil Assessment HOD": "Assessment HOD",          
             "Approval Pending from Assessment HOD": "Assessment HOD",
             "Approval Pending from QA / QC Assessment Team": "QA / QC Assessment Team",
             "Approval Pending from QA/QC HOD": "QA / QC Assessment HOD",
@@ -168,7 +172,7 @@ def update_approval_remarks(docname, remarks, action):
 @frappe.whitelist()
 def get_approval_details(docname):
     """Get approval details for a scrap declaration"""
-    doc = frappe.get_doc("Fixed Asset Inactive List", docname)
+    doc = frappe.get_doc("Idle Fixed Asset Declaration", docname)
     return {
         "approval_details": [
             {
@@ -197,7 +201,7 @@ def get_approval_details(docname):
 #     if not remarks:
 #         frappe.throw("Remarks is mandatory")
 
-#     doc = frappe.get_doc("Fixed Asset Inactive List", docname)
+#     doc = frappe.get_doc("Idle Fixed Asset Declaration", docname)
 
 #     # ---------------- STATUS ----------------
 #     if action == "Approve":

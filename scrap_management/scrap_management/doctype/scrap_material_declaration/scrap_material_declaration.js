@@ -1,4 +1,4 @@
-frappe.ui.form.on('Scrap Declaration List', {
+frappe.ui.form.on('Scrap Material Declaration', {
 
     // ======================================================
     // ONLOAD
@@ -15,7 +15,7 @@ frappe.ui.form.on('Scrap Declaration List', {
         // ---------- Checkbox custom label ----------
         const text = `
             I confirm that applicable EHS norms have been followed and the item is
-            properly cleaned as per requirement. This form will be used only for
+            properly cleaned as per requirement. <br> &nbsp; This form will be used only for
             non-hazardous material.
         `;
 
@@ -160,7 +160,7 @@ function apply_actual_qty_rules(frm) {
    REASON FOR GENERATION - 3 WORDS VALIDATION
 ====================================================== */
 
-frappe.ui.form.on('Scrap Declaration List', {
+frappe.ui.form.on('Scrap Material Declaration', {
     validate(frm) {
         (frm.doc.table || []).forEach(row => {
             if (row.reason_for_generation) {
@@ -180,7 +180,7 @@ frappe.ui.form.on('Scrap Declaration List', {
    FIXED ASSETS UI HANDLING
 ====================================================== */
 
-frappe.ui.form.on('Scrap Declaration List', {
+frappe.ui.form.on('Scrap Material Declaration', {
     refresh(frm) {
         handle_fixed_asset_ui(frm);
         update_particulars_label(frm);
@@ -261,7 +261,7 @@ const FIXED_ASSET_APPROVAL_MAP = {
     "Approve Pending from F & A HOD": "F & A HOD"
 };
 
-// frappe.ui.form.on('Scrap Declaration List', {
+// frappe.ui.form.on('Scrap Material Declaration', {
 
 //     // ======================================================
 //     // WORKFLOW HANDLER (SINGLE SOURCE OF TRUTH)
@@ -331,7 +331,7 @@ const FIXED_ASSET_APPROVAL_MAP = {
 
 
 //2
-// frappe.ui.form.on("Scrap Declaration List", {
+// frappe.ui.form.on("Scrap Material Declaration", {
 // 	refresh(frm) {
 // 		if (frm.__confirm_patched) return;
 // 		frm.__confirm_patched = true;
@@ -341,7 +341,7 @@ const FIXED_ASSET_APPROVAL_MAP = {
 // 		frappe.confirm = function (message, yes, no, primary, secondary) {
 // 			const text = (message || "").toString();
 // 			const is_this_doctype =
-// 				cur_frm && cur_frm.doctype === "Scrap Declaration List";
+// 				cur_frm && cur_frm.doctype === "Scrap Material Declaration";
 
 // 			// --- CUSTOM APPROVE DIALOG ---
 // 			if (is_this_doctype && text.includes("Approve")) {
@@ -399,7 +399,7 @@ const FIXED_ASSET_APPROVAL_MAP = {
 
 
 
-frappe.ui.form.on("Scrap Declaration List", {
+frappe.ui.form.on("Scrap Material Declaration", {
 	refresh(frm) {
 		if (frm.__confirm_patched) return;
 		frm.__confirm_patched = true;
@@ -409,7 +409,7 @@ frappe.ui.form.on("Scrap Declaration List", {
 		frappe.confirm = function (message, yes, no, primary, secondary) {
 			const text = (message || "").toString();
 			const is_this_doctype =
-				cur_frm && cur_frm.doctype === "Scrap Declaration List";
+				cur_frm && cur_frm.doctype === "Scrap Material Declaration";
 
 			// 🔥 APPLY ONLY FOR FIXED ASSET
 			if (

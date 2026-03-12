@@ -1,13 +1,13 @@
 // Copyright (c) 2026, Khan Anish and contributors
 // For license information, please see license.txt
 
-// frappe.ui.form.on("Fixed Asset Inactive List", {
+// frappe.ui.form.on("Idle Fixed Asset Declaration", {
 // 	refresh(frm) {
 
 // 	},
 // });
 // 
-frappe.ui.form.on('Fixed Asset Inactive List', {
+frappe.ui.form.on('Idle Fixed Asset Declaration', {
 
     company_name(frm) {
         frm.set_value('cost_center', null);
@@ -48,6 +48,10 @@ const FIXED_ASSET_APPROVAL_MAP = {
     "Approval Pending from R&D Assessment Team": "R&D Assessment Team",
     "Approval Pending from R&D Assessment HOD": "R&D Assessment HOD",
     "Approval Pending from Assessment Team": "Assessment Team",
+    "Approval Pending from IT Assessment Team": "Assessment Team",
+    "Approval Pending from IT Assessment HOD": "Assessment HOD", 
+    "Approval Pending from Civil Assessment Team": "Civil Assessment Team",
+    "Approval Pending from Civil Assessment HOD": "Civil Assessment HOD",
     "Approval Pending from Assessment HOD": "Assessment HOD",
     "Approval Pending from QA / QC Assessment Team": "QA / QC Assessment Team",
     "Approval Pending from QA/QC HOD": "QA / QC Assessment HOD",
@@ -58,7 +62,7 @@ const FIXED_ASSET_APPROVAL_MAP = {
 };
 
 
-frappe.ui.form.on("Fixed Asset Inactive List", {
+frappe.ui.form.on("Idle Fixed Asset Declaration", {
 	refresh(frm) {
 		if (frm.__confirm_patched) return;
 		frm.__confirm_patched = true;
@@ -68,7 +72,7 @@ frappe.ui.form.on("Fixed Asset Inactive List", {
 		frappe.confirm = function (message, yes, no, primary, secondary) {
 			const text = (message || "").toString();
 			const is_this_doctype =
-				cur_frm && cur_frm.doctype === "Fixed Asset Inactive List";
+				cur_frm && cur_frm.doctype === "Idle Fixed Asset Declaration";
 
 			if (
 				is_this_doctype &&
@@ -101,7 +105,7 @@ frappe.ui.form.on("Fixed Asset Inactive List", {
 						}
 
 						frappe.call({
-							method: "scrap_management.scrap_management.doctype.fixed_asset_inactive_list.fixed_asset_inactive_list.update_approval_remarks",
+							method: "scrap_management.scrap_management.doctype.idle_fixed_asset_declaration.idle_fixed_asset_declaration.update_approval_remarks",
 							args: {
 								docname: frm.doc.name,
 								stage: frm.doc.workflow_state,
@@ -134,7 +138,57 @@ frappe.ui.form.on("Fixed Asset Inactive List", {
 });
 
 
+frappe.ui.form.on('Idle Fixed Asset Declaration', {
 
+    type_of_fixed_assest(frm) {
+
+        if (!frm.doc.type_of_fixed_assest) return;
+
+        let type = frm.doc.type_of_fixed_assest;
+
+        // Part 1 Assets
+        if ([
+            "Civil structures and Furniture & Fixtures",
+            "I.T assets including hardware and software",
+            "Plant & Machinery including engineering and utility - instruments and equipment",
+            "Vehicles"
+        ].includes(type)) {
+
+            frm.set_value(
+                "particulars",
+                "Part 1 : All asset other then R&d and QA/QC FA (Except part2, part3 and part4)"
+            );
+        }
+
+        // Part 3
+        else if (type === "QC instruments and equipment") {
+
+            frm.set_value(
+                "particulars",
+                "Part 3 : QA/QC equipment and instrument and equipment FA"
+            );
+        }
+
+        // Part 2
+        else if (type === "R&D instruments and equipment") {
+
+            frm.set_value(
+                "particulars",
+                "Part 2 : R&d equipment and instrument and equipment FA"
+            );
+        }
+
+        // Part 4
+        else if (type === "Others") {
+
+            frm.set_value(
+                "particulars",
+                "Part 4 : All Assets except covered In part1, part2 and part3"
+            );
+        }
+    }
+
+});
 
 
 
@@ -161,7 +215,7 @@ function apply_particulars_filter(frm) {
 }
 
 
-// frappe.ui.form.on('Fixed Asset Inactive List', {
+// frappe.ui.form.on('Idle Fixed Asset Declaration', {
 
 //     before_workflow_action(frm) {
 
@@ -265,7 +319,33 @@ frappe.ui.form.on('Asset Details', {
     }
 });
 
+frappe.ui.form.on('Idle Fixed Asset Declaration', {
 
+    validate(frm) {
+
+        (frm.doc.asset_details || []).forEach(function(row, index) {
+
+            let images = [];
+
+            if (row.images) {
+                try {
+                    images = JSON.parse(row.images);
+                } catch (e) {
+                    images = [];
+                }
+            }
+
+            if (!images.length) {
+                frappe.throw(
+                    `Row ${index + 1}: Upload Images is mandatory in Asset Details`
+                );
+            }
+
+        });
+
+    }
+
+});
 
 function render_images(frm, row) {
 
@@ -353,5 +433,30 @@ frappe.ui.form.on('Asset Table Add Row', {
 
 });
 
+
+
+frappe.ui.form.on('Idle Fixed Asset Declaration', {
+
+    validate(frm) {
+
+        let total_qty = 0;
+
+        // Upper table total qty
+        (frm.doc.table_shjf || []).forEach(function(row) {
+            total_qty += flt(row.asset_qty);
+        });
+
+        // Lower table row count
+        let total_rows = (frm.doc.asset_details || []).length;
+
+        if (total_rows != total_qty) {
+
+            frappe.throw(
+                `Asset Details rows (${total_rows}) must match Asset Qty (${total_qty}). Please regenerate or correct the rows.`
+            );
+        }
+    }
+
+});
 
 

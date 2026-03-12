@@ -4,7 +4,7 @@ from frappe.model.naming import make_autoname
 from frappe.utils import getdate, nowdate, now_datetime
 
 
-class ScrapDeclarationList(Document):
+class ScrapMaterialDeclaration(Document):
 
     # --------------------------------------------------
     # VALIDATION

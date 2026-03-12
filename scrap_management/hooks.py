@@ -253,12 +253,12 @@ app_license = "mit"
 doc_events = {
 
     # Existing Scrap Workflow
-    "Scrap Declaration List": {
+    "Scrap Material Declaration": {
         "on_update": "scrap_management.workflow_email.send_workflow_email"
     },
 
     # ✅ NEW Fixed Asset Workflow
-"Fixed Asset Inactive List": {
+"Idle Fixed Asset Declaration": {
      "on_update": "scrap_management.fixed_asset_workflow_email.send_fixed_asset_workflow_email"
     
 }

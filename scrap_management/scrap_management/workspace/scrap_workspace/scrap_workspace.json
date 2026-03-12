@@ -1,7 +1,7 @@
 {
  "app": "scrap_management",
  "charts": [],
- "content": "[{\"id\":\"BBU9oORkDA\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Scrap Welcome Line\",\"col\":12}},{\"id\":\"jZaB9D08SP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Declaration List\",\"col\":3}},{\"id\":\"mZS5ZOnsOi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Fixed Asset Inactive List\",\"col\":3}},{\"id\":\"qKUZ1BhLlg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Company Master\",\"col\":3}},{\"id\":\"n6JLhah000\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost Center Master\",\"col\":3}}]",
+ "content": "[{\"id\":\"BBU9oORkDA\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Scrap Welcome Line\",\"col\":12}},{\"id\":\"jZaB9D08SP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Material Declaration\",\"col\":3}},{\"id\":\"mZS5ZOnsOi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Idle Fixed Asset Declaration\",\"col\":3}},{\"id\":\"qKUZ1BhLlg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Company Master\",\"col\":3}},{\"id\":\"n6JLhah000\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost Center Master\",\"col\":3}}]",
  "creation": "2026-03-09 16:30:20.466831",
  "custom_blocks": [
   {
@@ -20,7 +20,7 @@
  "label": "Scrap Workspace",
  "link_type": "DocType",
  "links": [],
- "modified": "2026-03-09 16:30:20.466831",
+ "modified": "2026-03-12 14:42:33.525539",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Scrap Workspace",
@@ -39,16 +39,16 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Fixed Asset Inactive List",
-   "link_to": "Fixed Asset Inactive List",
+   "label": "Scrap Material Declaration",
+   "link_to": "Scrap Material Declaration",
    "stats_filter": "[]",
    "type": "DocType"
   },
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Scrap Declaration List",
-   "link_to": "Scrap Declaration List",
+   "label": "Idle Fixed Asset Declaration",
+   "link_to": "Idle Fixed Asset Declaration",
    "stats_filter": "[]",
    "type": "DocType"
   },
