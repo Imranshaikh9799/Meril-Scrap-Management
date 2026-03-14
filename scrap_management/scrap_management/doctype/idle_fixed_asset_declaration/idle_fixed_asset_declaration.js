@@ -52,6 +52,8 @@ const FIXED_ASSET_APPROVAL_MAP = {
     "Approval Pending from IT Assessment HOD": "Assessment HOD", 
     "Approval Pending from Civil Assessment Team": "Civil Assessment Team",
     "Approval Pending from Civil Assessment HOD": "Civil Assessment HOD",
+    "Approval Pending from Vehicles Assessment Team": "Vehicles Assessment Team",
+    "Approval Pending from Vehicles Assessment HOD": "Vehicles Assessment HOD", 
     "Approval Pending from Assessment HOD": "Assessment HOD",
     "Approval Pending from QA / QC Assessment Team": "QA / QC Assessment Team",
     "Approval Pending from QA/QC HOD": "QA / QC Assessment HOD",
