@@ -21,9 +21,6 @@
   "place",
   "section_break_doch",
   "table_pjgs",
-  "section_break_yefo",
-  "fixed",
-  "table_jrcs",
   "section_break_imjd",
   "declare_by",
   "hod",
@@ -157,27 +154,13 @@
    "fieldname": "table_pjgs",
    "fieldtype": "Table",
    "options": "Approval"
-  },
-  {
-   "fieldname": "section_break_yefo",
-   "fieldtype": "Section Break",
-   "label": "Fixed Asset"
-  },
-  {
-   "fieldname": "fixed",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "table_jrcs",
-   "fieldtype": "Table",
-   "options": "Approval"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-11 14:17:36.849161",
- "modified_by": "Administrator",
+ "modified": "2026-03-14 11:24:41.256454",
+ "modified_by": "ujjawal.patel@merillife.com",
  "module": "Scrap Management",
  "name": "Cost Center Master",
  "naming_rule": "Expression (old style)",
