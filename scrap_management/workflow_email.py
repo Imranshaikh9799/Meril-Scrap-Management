@@ -18,42 +18,40 @@ WORKFLOW_APPROVAL_TYPE_MAP = {
 # ---------------------------------------------------------
 
 def send_workflow_email(doc, method=None):
+
     if not doc.workflow_state:
         return
 
     before = doc.get_doc_before_save()
 
-    # -------------------------------------------------
-    # ✅ ACK + LOCATION MAIL (ALLOW EVEN IF SAME STATE)
-    # -------------------------------------------------
+    # ACKNOWLEDGEMENT MAIL
     if doc.workflow_state == "Received by Scrap Incharge":
         send_acknowledgement_to_declared_user(doc)
 
-    # -------------------------------------------------
-    # 🔒 STOP DUPLICATE ONLY FOR APPROVAL MAILS
-    # -------------------------------------------------
+    # Prevent duplicate approval mails
     if before and before.workflow_state == doc.workflow_state:
         return
 
-    # Ignore Draft
     if doc.docstatus == 0 and doc.workflow_state == "Draft":
         return
 
-    # 🔔 FINAL APPROVAL → MAIL DECLARER
+    # Final approval mail
     if doc.workflow_state == "Receiving Pending from Scrap Incharge":
         notify_declared_user_before_receiving(doc)
 
-    table_pjgs = WORKFLOW_APPROVAL_TYPE_MAP.get(doc.workflow_state)
-    if not table_pjgs:
+    approval_type = WORKFLOW_APPROVAL_TYPE_MAP.get(doc.workflow_state)
+    if not approval_type:
         return
 
-    send_to_cost_center_users(doc, table_pjgs)
+    send_to_cost_center_users(doc, approval_type)
+
 
 # ---------------------------------------------------------
-# Resolve Employees from Child Table
+# Resolve Users from Approval Table
 # ---------------------------------------------------------
 
 def send_to_cost_center_users(doc, approval_type):
+
     if not doc.cost_center:
         return
 
@@ -71,23 +69,35 @@ def send_to_cost_center_users(doc, approval_type):
     users = set()
 
     for row in approvals:
+
+        # -----------------------------
+        # Employee Based
+        # -----------------------------
         if not row.role_enable and row.employee_name:
+
             user_id = frappe.db.get_value(
-                "Employee", row.employee_name, "user_id"
+                "Employee",
+                row.employee_name,
+                "user_id"
             )
-            if user_id:
+
+            if user_id and frappe.db.exists("User", user_id):
                 users.add(user_id)
 
+        # -----------------------------
+        # Role Based (User Doctype)
+        # -----------------------------
         elif row.role_enable and row.role:
+
             role_users = frappe.get_all(
-                "Employee",
-                filters={
-                    "custom_role": row.role,
-                    "user_id": ["is", "set"],
-                },
-                pluck="user_id",
+                "Has Role",
+                filters={"role": row.role},
+                pluck="parent"
             )
-            users.update(role_users)
+
+            for u in role_users:
+                if frappe.db.get_value("User", u, "enabled") == 1:
+                    users.add(u)
 
     if not users:
         return
@@ -101,11 +111,16 @@ def send_to_cost_center_users(doc, approval_type):
         doc=doc,
     )
 
+
 # ---------------------------------------------------------
-# 🔔 Notification Log
+# Notification Log
 # ---------------------------------------------------------
 
 def create_notification_log(user, doc):
+
+    if not frappe.db.exists("User", user):
+        return
+
     frappe.get_doc({
         "doctype": "Notification Log",
         "subject": f"Scrap Declaration {doc.name} Pending Approval",
@@ -120,11 +135,13 @@ def create_notification_log(user, doc):
         "document_name": doc.name,
     }).insert(ignore_permissions=True)
 
+
 # ---------------------------------------------------------
-# 📧 Standard Approval Email
+# Approval Email
 # ---------------------------------------------------------
 
 def send_email(recipients, subject, doc):
+
     doc_url = get_url_to_form(doc.doctype, doc.name)
 
     frappe.sendmail(
@@ -149,11 +166,13 @@ def send_email(recipients, subject, doc):
         """,
     )
 
-# =========================================================
-# FINAL STAGE → MAIL DECLARER
-# =========================================================
+
+# ---------------------------------------------------------
+# FINAL APPROVAL MAIL
+# ---------------------------------------------------------
 
 def notify_declared_user_before_receiving(doc):
+
     if not doc.owner:
         return
 
@@ -168,11 +187,13 @@ def notify_declared_user_before_receiving(doc):
         """,
     )
 
-# =========================================================
-# ✅ ACKNOWLEDGEMENT TO DECLARER (FIXED)
-# =========================================================
+
+# ---------------------------------------------------------
+# ACKNOWLEDGEMENT MAIL
+# ---------------------------------------------------------
 
 def send_acknowledgement_to_declared_user(doc):
+
     if not doc.owner:
         return
 
@@ -188,7 +209,3 @@ def send_acknowledgement_to_declared_user(doc):
         Thank you.
         """,
     )
-
-# =========================================================
-# LOCATION-WISE ITEM NOTIFICATION
-# =========================================================

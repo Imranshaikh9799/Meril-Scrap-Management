@@ -9,32 +9,39 @@ from frappe.utils import get_url_to_form
 # =========================================================
 
 def send_fixed_asset_workflow_email(doc, method=None):
-
+    """
+    Triggered on save of Idle Fixed Asset Declaration.
+    Sends emails based on workflow state changes, plus an acknowledgment
+    to the initiator and HOD after every transition.
+    """
     if not doc.workflow_state:
         return
 
     before = doc.get_doc_before_save()
 
-    # Trigger only if state changed
     if not before or before.workflow_state == doc.workflow_state:
         return
 
-    # 🔴 REJECT → Back to Draft
+    # -----------------------------------------------------------------
+    # Send acknowledgment to Declare By (owner) and HOD for every change
+    # -----------------------------------------------------------------
+    send_acknowledgment_to_initiator_and_hod(doc)
+
+    # -----------------------------------------------------------------
+    # State-specific emails
+    # -----------------------------------------------------------------
     if doc.workflow_state == "Draft":
         handle_rejection(doc)
         return
 
-    # 🟠 Change Storage Location
     if doc.workflow_state == "Change Storage Location":
         handle_location_change(doc)
         return
 
-    # 🟢 FINAL SUBMITTED
     if doc.workflow_state == "Submitted":
         handle_final_submission(doc)
         return
 
-    # 🟡 Pending Approval States
     if "Pending" in doc.workflow_state:
         approval_type = extract_approval_type(doc.workflow_state)
         recipients = get_cost_center_users(doc, approval_type)
@@ -45,23 +52,46 @@ def send_fixed_asset_workflow_email(doc, method=None):
 
 
 # =========================================================
+# ACKNOWLEDGMENT EMAIL TO INITIATOR AND HOD
+# =========================================================
+
+def send_acknowledgment_to_initiator_and_hod(doc):
+    """
+    Sends an acknowledgment email to the document owner (Declare By)
+    and the HOD(s) of the associated cost center after every workflow transition.
+    """
+    recipients = set()
+
+    # Add the document owner (Declare By)
+    if doc.owner:
+        owner_email = frappe.db.get_value("User", doc.owner, "name")
+        if owner_email and frappe.db.get_value("User", owner_email, "enabled"):
+            recipients.add(owner_email)
+
+    # Add HOD(s) from the cost center
+    hod_emails = get_cost_center_users(doc, "HOD")
+    recipients.update(hod_emails)
+
+    if recipients:
+        subject = f"Acknowledgement: Idle Fixed Asset Declaration {doc.name} moved to {doc.workflow_state}"
+        send_email(list(recipients), subject, doc)
+
+
+# =========================================================
 # HANDLE REJECTION
 # =========================================================
 
 def handle_rejection(doc):
-
     recipients = set()
 
     if doc.owner:
         recipients.add(doc.owner)
 
-    if hasattr(doc, "approval_details") and doc.approval_details:
+    if doc.approval_details:
         for row in doc.approval_details:
             if row.approved_rejected == "Approved":
                 user_email = frappe.db.get_value(
-                    "User",
-                    {"full_name": row.approved_by},
-                    "name"
+                    "User", {"full_name": row.approved_by}, "name"
                 )
                 if user_email:
                     recipients.add(user_email)
@@ -76,19 +106,16 @@ def handle_rejection(doc):
 # =========================================================
 
 def handle_final_submission(doc):
-
     recipients = set()
 
     if doc.owner:
         recipients.add(doc.owner)
 
-    if hasattr(doc, "approval_details") and doc.approval_details:
+    if doc.approval_details:
         for row in doc.approval_details:
             if row.approved_rejected == "Approved":
                 user_email = frappe.db.get_value(
-                    "User",
-                    {"full_name": row.approved_by},
-                    "name"
+                    "User", {"full_name": row.approved_by}, "name"
                 )
                 if user_email:
                     recipients.add(user_email)
@@ -103,7 +130,6 @@ def handle_final_submission(doc):
 # =========================================================
 
 def handle_location_change(doc):
-
     recipients = set()
 
     if not doc.company_name:
@@ -120,28 +146,22 @@ def handle_location_change(doc):
     )
 
     for row in approvals:
-
+        # Employee Based
         if not row.role_enable and row.employee_name:
-
-            user_id = frappe.db.get_value(
-                "Employee", row.employee_name, "user_id"
-            )
-
-            if user_id:
+            user_id = frappe.db.get_value("Employee", row.employee_name, "user_id")
+            if user_id and frappe.db.get_value("User", user_id, "enabled"):
                 recipients.add(user_id)
 
+        # Role Based
         elif row.role_enable and row.role:
-
             role_users = frappe.get_all(
-                "Employee",
-                filters={
-                    "custom_role": row.role,
-                    "user_id": ["is", "set"],
-                },
-                pluck="user_id",
+                "Has Role",
+                filters={"role": row.role},
+                pluck="parent"
             )
-
-            recipients.update(role_users)
+            for user in role_users:
+                if frappe.db.get_value("User", user, "enabled"):
+                    recipients.add(user)
 
     if recipients:
         subject = f"Change the Location - {doc.name}"
@@ -163,17 +183,11 @@ def extract_approval_type(state):
 # =========================================================
 
 def get_cost_center_users(doc, approval_type):
-
     users = set()
 
-    # ---------------------------------------------
-    # HOD → From Cost Center Master
-    # ---------------------------------------------
     if approval_type == "HOD":
-
         if not doc.cost_center:
             return []
-
         approvals = frappe.get_all(
             "Approval",
             filters={
@@ -183,15 +197,9 @@ def get_cost_center_users(doc, approval_type):
             },
             fields=["employee_name", "role_enable", "role"],
         )
-
-    # ---------------------------------------------
-    # Other Approvals → From Company Master
-    # ---------------------------------------------
     else:
-
         if not doc.company_name:
             return []
-
         approvals = frappe.get_all(
             "Approval",
             filters={
@@ -202,34 +210,20 @@ def get_cost_center_users(doc, approval_type):
             fields=["employee_name", "role_enable", "role"],
         )
 
-    # ---------------------------------------------
-    # Resolve Users
-    # ---------------------------------------------
     for row in approvals:
-
-        # Employee Based
         if not row.role_enable and row.employee_name:
-
-            user_id = frappe.db.get_value(
-                "Employee", row.employee_name, "user_id"
-            )
-
-            if user_id:
+            user_id = frappe.db.get_value("Employee", row.employee_name, "user_id")
+            if user_id and frappe.db.get_value("User", user_id, "enabled"):
                 users.add(user_id)
-
-        # Role Based
         elif row.role_enable and row.role:
-
             role_users = frappe.get_all(
-                "Employee",
-                filters={
-                    "custom_role": row.role,
-                    "user_id": ["is", "set"],
-                },
-                pluck="user_id",
+                "Has Role",
+                filters={"role": row.role},
+                pluck="parent"
             )
-
-            users.update(role_users)
+            for user in role_users:
+                if frappe.db.get_value("User", user, "enabled"):
+                    users.add(user)
 
     return list(users)
 
@@ -239,16 +233,12 @@ def get_cost_center_users(doc, approval_type):
 # =========================================================
 
 def send_email(recipients, subject, doc):
-
     if not recipients:
         return
 
     doc_url = get_url_to_form(doc.doctype, doc.name)
 
-    # ---------------- Subheading ----------------
-
     sub_heading = ""
-
     if doc.particulars:
         if doc.particulars.startswith("Part 1"):
             sub_heading = "Other than R&D and QA/QC instruments and equipments"
@@ -258,8 +248,6 @@ def send_email(recipients, subject, doc):
             sub_heading = "QA/QC Department Instruments and Equipments"
         elif doc.particulars.startswith("Part 4"):
             sub_heading = "IT & Other Department Instruments and Equipments"
-
-    # ---------------- Logo ----------------
 
     logo_html = ""
     try:
@@ -271,27 +259,19 @@ def send_email(recipients, subject, doc):
         pass
 
     attachments = []
-
-    # ---------------- Attach Child Table Images ----------------
-
-    if hasattr(doc, "asset_details") and doc.asset_details:
+    if doc.asset_details:
         for row in doc.asset_details:
             if row.images:
                 try:
                     image_list = json.loads(row.images)
-
                     for file_url in image_list:
                         file_doc = frappe.get_doc("File", {"file_url": file_url})
-
                         attachments.append({
                             "fname": file_doc.file_name,
                             "fcontent": file_doc.get_content()
                         })
-
                 except Exception:
                     pass
-
-    # ---------------- Email Start ----------------
 
     message = f"""
     <div style="font-family:Arial; font-size:13px;">
@@ -304,8 +284,6 @@ def send_email(recipients, subject, doc):
     </div>
     <br>
     """
-
-    # ---------------- Document Info ----------------
 
     message += f"""
     <table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
@@ -331,8 +309,6 @@ def send_email(recipients, subject, doc):
     <br>
     """
 
-    # ---------------- Asset Table ----------------
-
     message += """
     <b>Asset Details</b>
     <table border="1" cellpadding="6" cellspacing="0" width="100%" style="border-collapse:collapse;">
@@ -346,22 +322,19 @@ def send_email(recipients, subject, doc):
         </tr>
     """
 
-    if hasattr(doc, "asset_details") and doc.asset_details:
-        for row in doc.asset_details:
-            message += f"""
-            <tr>
-                <td style="text-align:center;">{row.asset_code or ""}</td>
-                <td style="text-align:center;">{row.asset_description or ""}</td>
-                <td style="text-align:center;">{row.asset_qty or ""}</td>
-                <td style="text-align:center;">{row.asset_location or ""}</td>
-                <td style="text-align:center;">{row.asset_tag_no or ""}</td>
-                <td style="text-align:center;">{row.reason or ""}</td>
-            </tr>
-            """
+    for row in doc.asset_details:
+        message += f"""
+        <tr>
+            <td style="text-align:center;">{row.asset_code or ""}</td>
+            <td style="text-align:center;">{row.asset_description or ""}</td>
+            <td style="text-align:center;">{row.asset_qty or ""}</td>
+            <td style="text-align:center;">{row.asset_location or ""}</td>
+            <td style="text-align:center;">{row.asset_tag_no or ""}</td>
+            <td style="text-align:center;">{row.reason or ""}</td>
+        </tr>
+        """
 
     message += "</table><br><br>"
-
-    # ---------------- Approval Table ----------------
 
     message += """
 <b>Approval Details</b>
@@ -373,18 +346,13 @@ def send_email(recipients, subject, doc):
 </tr>
 """
 
-    if hasattr(doc, "approval_details") and doc.approval_details:
-        for row in doc.approval_details:
-
-            user_email = ""
-            if row.approved_by:
-                user_email = frappe.db.get_value(
-                    "User",
-                    {"full_name": row.approved_by},
-                    "name"
-                ) or ""
-
-            message += f"""
+    for row in doc.approval_details:
+        user_email = ""
+        if row.approved_by:
+            user_email = frappe.db.get_value(
+                "User", {"full_name": row.approved_by}, "name"
+            ) or ""
+        message += f"""
 <tr>
 <td style="text-align:center;">{row.stages or ""}</td>
 <td style="text-align:center;">{user_email}</td>
@@ -393,8 +361,6 @@ def send_email(recipients, subject, doc):
 """
 
     message += "</table><br><br>"
-
-    # ---------------- Button ----------------
 
     message += f"""
 <div style="text-align:center;">
