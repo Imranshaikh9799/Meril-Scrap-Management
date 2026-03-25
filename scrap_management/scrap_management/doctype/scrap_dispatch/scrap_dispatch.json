@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SD-.####",
+ "creation": "2026-03-17 14:54:43.671109",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "to",
+  "column_break_dqzd",
+  "date",
+  "section_break_grrx",
+  "table_pnkg",
+  "section_break_tlqd",
+  "table_thrp"
+ ],
+ "fields": [
+  {
+   "fieldname": "to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dqzd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_grrx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_pnkg",
+   "fieldtype": "Table",
+   "options": "Item Scrap Dispatch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_tlqd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_thrp",
+   "fieldtype": "Table",
+   "label": "Dispatch Data List",
+   "options": "Scrap Dispatch Entry List"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-25 17:00:35.142484",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Scrap Dispatch",
+ "naming_rule": "Expression",
+ "owner": "ujjawal.patel@merillife.com",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

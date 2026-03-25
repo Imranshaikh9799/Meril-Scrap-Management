@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-17 15:56:59.148628",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "item_description",
+  "scrap",
+  "item_qty",
+  "scrap_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "item_code.description",
+   "fieldname": "item_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Description",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scrap",
+   "fieldtype": "Button",
+   "in_list_view": 1,
+   "label": "Scrap"
+  },
+  {
+   "fieldname": "scrap_reference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Scrap Reference",
+   "options": "Scrap Material Declaration"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-25 17:00:03.648197",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Item Scrap Dispatch",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
