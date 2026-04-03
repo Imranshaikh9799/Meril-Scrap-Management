@@ -263,3 +263,15 @@ doc_events = {
     
 }
 }
+
+scheduler_events = {
+    "cron": {
+        "0 9 * * 1": [
+            "scrap_management.scrap_management.scrap_summary.weekly_scrap_summary"
+        ],
+        "0 9 1 * *": [
+            "scrap_management.scrap_management.scrap_summary.monthly_scrap_summary"
+        ]
+    }
+}
+

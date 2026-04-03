@@ -6,7 +6,6 @@ from frappe.utils import get_url_to_form
 # ---------------------------------------------------------
 
 WORKFLOW_APPROVAL_TYPE_MAP = {
-    "Approval Pending from HOD": "HOD",
     "Approval Pending from QA/QC": "QA/QC",
     "Approval Pending from PPIC": "PPIC",
     "Approval Pending from Finance HOD": "Finance HOD",
@@ -24,18 +23,30 @@ def send_workflow_email(doc, method=None):
 
     before = doc.get_doc_before_save()
 
-    # ACKNOWLEDGEMENT MAIL
-    if doc.workflow_state == "Received by Scrap Incharge":
-        send_acknowledgement_to_declared_user(doc)
-
-    # Prevent duplicate approval mails
+    # -----------------------------------------------------
+    # ✅ STOP duplicate triggers (IMPORTANT FIX)
+    # -----------------------------------------------------
     if before and before.workflow_state == doc.workflow_state:
         return
+
+    # -----------------------------------------------------
+    # ✅ Notify Manager ONLY on first creation
+    # -----------------------------------------------------
+    if not before:
+        notify_reports_to_user(doc)
+
+    # -----------------------------------------------------
+    # ACKNOWLEDGEMENT MAIL (ONLY once)
+    # -----------------------------------------------------
+    if doc.workflow_state == "Received by Scrap Incharge":
+        send_acknowledgement_to_declared_user(doc)
 
     if doc.docstatus == 0 and doc.workflow_state == "Draft":
         return
 
-    # Final approval mail
+    # -----------------------------------------------------
+    # Final approval mail (ONLY once)
+    # -----------------------------------------------------
     if doc.workflow_state == "Receiving Pending from Scrap Incharge":
         notify_declared_user_before_receiving(doc)
 
@@ -44,6 +55,59 @@ def send_workflow_email(doc, method=None):
         return
 
     send_to_cost_center_users(doc, approval_type)
+
+
+# ---------------------------------------------------------
+# Notify Reports To User (Manager)
+# ---------------------------------------------------------
+
+def notify_reports_to_user(doc):
+
+    if not doc.owner:
+        return
+
+    employee = frappe.db.get_value(
+        "Employee",
+        {"user_id": doc.owner},
+        ["name", "reports_to"],
+        as_dict=True
+    )
+
+    if not employee or not employee.reports_to:
+        return
+
+    manager_user = frappe.db.get_value(
+        "Employee",
+        employee.reports_to,
+        "user_id"
+    )
+
+    if not manager_user:
+        return
+
+    doc_url = get_url_to_form(doc.doctype, doc.name)
+
+    frappe.sendmail(
+        recipients=[manager_user],
+        subject=f"Scrap Declaration {doc.name} Created",
+        message=f"""
+        Dear Sir/Madam,<br><br>
+
+        A Scrap Declaration has been created by your team member.<br><br>
+
+        <b>Document:</b> {doc.name}<br>
+        <b>Employee:</b> {doc.owner}<br>
+        <b>Company:</b> {doc.company_name}<br>
+        <b>Cost Center:</b> {doc.cost_center}<br>
+        <b>Date:</b> {doc.date_addf}<br><br>
+
+        <a href="{doc_url}"
+           style="padding:12px 18px;background:#2490ef;color:#fff;
+           text-decoration:none;border-radius:6px;">
+           View Scrap Declaration
+        </a>
+        """,
+    )
 
 
 # ---------------------------------------------------------
@@ -67,12 +131,10 @@ def send_to_cost_center_users(doc, approval_type):
     )
 
     users = set()
+    manager_user = get_reporting_manager(doc)
 
     for row in approvals:
 
-        # -----------------------------
-        # Employee Based
-        # -----------------------------
         if not row.role_enable and row.employee_name:
 
             user_id = frappe.db.get_value(
@@ -82,11 +144,9 @@ def send_to_cost_center_users(doc, approval_type):
             )
 
             if user_id and frappe.db.exists("User", user_id):
-                users.add(user_id)
+                if user_id != manager_user:
+                    users.add(user_id)
 
-        # -----------------------------
-        # Role Based (User Doctype)
-        # -----------------------------
         elif row.role_enable and row.role:
 
             role_users = frappe.get_all(
@@ -97,7 +157,8 @@ def send_to_cost_center_users(doc, approval_type):
 
             for u in role_users:
                 if frappe.db.get_value("User", u, "enabled") == 1:
-                    users.add(u)
+                    if u != manager_user:
+                        users.add(u)
 
     if not users:
         return
@@ -109,6 +170,32 @@ def send_to_cost_center_users(doc, approval_type):
         recipients=list(users),
         subject=f"Scrap Declaration {doc.name} Pending Approval",
         doc=doc,
+    )
+
+
+# ---------------------------------------------------------
+# Helper: Get Reporting Manager
+# ---------------------------------------------------------
+
+def get_reporting_manager(doc):
+
+    if not doc.owner:
+        return None
+
+    employee = frappe.db.get_value(
+        "Employee",
+        {"user_id": doc.owner},
+        ["reports_to"],
+        as_dict=True
+    )
+
+    if not employee or not employee.reports_to:
+        return None
+
+    return frappe.db.get_value(
+        "Employee",
+        employee.reports_to,
+        "user_id"
     )
 
 
