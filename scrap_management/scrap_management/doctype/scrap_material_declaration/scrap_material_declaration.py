@@ -90,12 +90,17 @@ class ScrapMaterialDeclaration(Document):
         # REGULAR SCRAP
         # ==================================================
         if self.scrap_type == "Regular Scrap":
-            return  # direct Scrap Incharge via workflow
+            return
 
         # ==================================================
         # OTHER THAN REGULAR SCRAP
         # ==================================================
         particulars = (self.particulars or "").strip()
+
+        # 🔥 NEW: QA (for Finished Goods)
+        if from_state == "Approval Pending from QA":
+            self.upsert_approval_row("QA", "Approved")
+            return
 
         # ---- With QA/QC ----
         if particulars not in ["Spares", "Consumables (Others)"]:
@@ -167,7 +172,7 @@ class ScrapMaterialDeclaration(Document):
 
 
 # ======================================================
-# REMARK BASED APPROVAL (FIXED ASSET) - Updated for new states
+# REMARK BASED APPROVAL (FIXED ASSET)
 # ======================================================
 @frappe.whitelist()
 def update_approval_remarks(docname, stage, remarks, action="Approve"):
@@ -175,14 +180,14 @@ def update_approval_remarks(docname, stage, remarks, action="Approve"):
     if not remarks:
         frappe.throw("Remarks is mandatory")
 
-    doc = frappe.get_doc("Scrap Declaration List", docname)
+    doc = frappe.get_doc("Scrap Material Declaration", docname)
 
     # Status
     if action == "Approve":
         status = "Approved"
     elif action == "Reject":
         status = "Rejected"
-    else:  # Send
+    else:
         status = "Approved"
 
     # 🔥 STAGE DETERMINATION
@@ -191,6 +196,13 @@ def update_approval_remarks(docname, stage, remarks, action="Approve"):
     else:
         state_to_stage_map = {
             "Approval Pending from HOD": "HOD",
+
+            # ✅ NEW
+            "Approval Pending from QA": "QA",
+
+            # ✅ IMPORTANT FIX
+            "Approval Pending from QA/QC": "QA/QC",
+
             "Approval Pending from R&D Assessment Team": "R&D Assessment Team",
             "Approval Pending from R&D Assessment HOD": "R&D Assessment HOD",
             "Approval Pending from Assessment Team": "Assessment Team",
@@ -205,10 +217,8 @@ def update_approval_remarks(docname, stage, remarks, action="Approve"):
 
         stage = state_to_stage_map.get(doc.workflow_state)
 
-
         if not stage:
-         frappe.throw(f"No approval stage mapped for workflow state: {doc.workflow_state}")
-
+            frappe.throw(f"No approval stage mapped for workflow state: {doc.workflow_state}")
 
     # 🔄 UPDATE OR INSERT
     for row in doc.approval_details:
@@ -236,14 +246,14 @@ def update_approval_remarks(docname, stage, remarks, action="Approve"):
     return True
 
 
-
 # ======================================================
-# GET APPROVAL DETAILS (Optional - if you need to fetch details)
+# GET APPROVAL DETAILS
 # ======================================================
 @frappe.whitelist()
 def get_approval_details(docname):
-    """Get approval details for a scrap declaration"""
-    doc = frappe.get_doc("Scrap Declaration List", docname)
+
+    doc = frappe.get_doc("Scrap Material Declaration", docname)
+
     return {
         "approval_details": [
             {
@@ -256,4 +266,3 @@ def get_approval_details(docname):
             for row in doc.approval_details
         ]
     }
-    

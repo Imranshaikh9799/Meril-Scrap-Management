@@ -258,7 +258,10 @@ const FIXED_ASSET_APPROVAL_MAP = {
     "Approval Pending from CFO": "CFO",
     "Approval Pending from CEO": "CEO",
     "Approve Pending from F & A Dept.": "F & A Dept.",
-    "Approve Pending from F & A HOD": "F & A HOD"
+    "Approve Pending from F & A HOD": "F & A HOD",
+    "Approval Pending from QA": "QA"
+
+
 };
 
 // frappe.ui.form.on('Scrap Material Declaration', {

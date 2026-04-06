@@ -10,6 +10,7 @@ WORKFLOW_APPROVAL_TYPE_MAP = {
     "Approval Pending from PPIC": "PPIC",
     "Approval Pending from Finance HOD": "Finance HOD",
     "Receiving Pending from Scrap Incharge": "Scrap Incharge",
+    "Approval Pending from QA": "QA",
 }
 
 # ---------------------------------------------------------
