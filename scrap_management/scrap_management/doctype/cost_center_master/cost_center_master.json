@@ -8,6 +8,7 @@
  "field_order": [
   "company_section",
   "company_name",
+  "plant",
   "column_break_ynpj",
   "company",
   "section_break_dzji",
@@ -154,12 +155,17 @@
    "fieldname": "table_pjgs",
    "fieldtype": "Table",
    "options": "Approval"
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Data",
+   "label": "Plant"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-02 14:49:25.620096",
+ "modified": "2026-04-06 15:12:45.477888",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Cost Center Master",
