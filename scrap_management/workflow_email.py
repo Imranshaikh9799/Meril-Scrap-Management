@@ -21,6 +21,7 @@ def send_workflow_email(doc, method=None):
 
     if not doc.workflow_state:
         return
+    
 
     before = doc.get_doc_before_save()
 
