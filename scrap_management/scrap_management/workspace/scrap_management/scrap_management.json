@@ -1,0 +1,58 @@
+{
+ "app": "scrap_management",
+ "charts": [],
+ "content": "[{\"id\":\"BBU9oORkDA\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Scrap Welcome Line\",\"col\":12}},{\"id\":\"jZaB9D08SP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Material Declaration\",\"col\":3}},{\"id\":\"qKUZ1BhLlg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Scrap Dispatch\",\"col\":3}}]",
+ "creation": "2026-04-07 16:25:27.306049",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Scrap Welcome Line",
+   "label": "Scrap Welcome Line"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "image-view",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Scrap Management",
+ "link_type": "DocType",
+ "links": [],
+ "modified": "2026-04-07 16:25:27.306049",
+ "modified_by": "Administrator",
+ "module": "Scrap Management",
+ "name": "Scrap Management",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Scrap User"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Scrap Material Declaration",
+   "link_to": "Scrap Material Declaration",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "doc_view": "List",
+   "label": "Scrap Dispatch",
+   "link_to": "Scrap Dispatch",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Scrap Management",
+ "type": "Workspace"
+}
