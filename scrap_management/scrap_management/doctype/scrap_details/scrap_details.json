@@ -42,7 +42,7 @@
   },
   {
    "columns": 4,
-   "fetch_from": "scrap_item_material_code.item_name",
+   "fetch_from": "scrap_item_material_code.description",
    "fieldname": "product_description",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -124,7 +124,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-25 11:12:35.385768",
+ "modified": "2026-04-09 11:45:10.766937",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Scrap Details",
