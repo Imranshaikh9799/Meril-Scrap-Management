@@ -43,12 +43,17 @@ def send_fixed_asset_workflow_email(doc, method=None):
         return
 
     if "Pending" in doc.workflow_state:
-        approval_type = extract_approval_type(doc.workflow_state)
-        recipients = get_company_approval_users(doc, approval_type)
+       approval_type = extract_approval_type(doc.workflow_state)
 
-        if recipients:
-            subject = f"Idle Fixed Asset Declaration {doc.name} - {doc.workflow_state}"
-            send_email(recipients, subject, doc)
+    # HOD ko mail nahi bhejna
+    if approval_type == "HOD":
+        return
+
+    recipients = get_company_approval_users(doc, approval_type)
+
+    if recipients:
+        subject = f"Idle Fixed Asset Declaration {doc.name} - {doc.workflow_state}"
+        send_email(recipients, subject, doc)
 
 
 # =========================================================

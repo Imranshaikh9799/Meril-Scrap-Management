@@ -152,7 +152,13 @@ frappe.ui.form.on('Idle Fixed Asset Declaration', {
 
         // Part 1 Assets
         if ([
-            "Civil structures and Furniture & Fixtures",
+            "Civil structures and Lease Hold Improvements",
+            "HVAC - Plant & Machinery including engineering and utility - instruments and equipment",
+            "Mechanical - Plant & Machinery including engineering and utility - instruments and equipment",
+            "Electrical - Plant & Machinery including engineering and utility - instruments and equipment",
+            "BMS - Plant & Machinery including engineering and utility - instruments and equipment",
+            "Office Equipment other",
+            "Furniture & Fixtures",
             "I.T assets including hardware and software",
             "Plant & Machinery including engineering and utility - instruments and equipment",
             "Vehicles"
@@ -165,13 +171,18 @@ frappe.ui.form.on('Idle Fixed Asset Declaration', {
         }
 
         // Part 3
-        else if (type === "QC instruments and equipment") {
+                else if ([
+            "QC Other then packing material instruments and Equipment",
+            "QA Instruments and Equipment",
+            "QC Packing material Instruments and Equipment"
+        ].includes(type)) {
 
             frm.set_value(
                 "particulars",
                 "Part 3 : QA/QC equipment and instrument and equipment FA"
             );
         }
+
 
         // Part 2
         else if (type === "R&D instruments and equipment") {
