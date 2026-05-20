@@ -316,6 +316,25 @@ def send_email(recipients, subject, doc):
     </table>
     """
 
+    message += f"""
+    <br><br>
+    <div style="text-align:center;">
+        <a href="{doc_url}"
+           style="
+               padding:12px 20px;
+               background:#2490ef;
+               color:#ffffff;
+               text-decoration:none;
+               border-radius:6px;
+               font-weight:bold;
+               display:inline-block;
+           ">
+           Open Fixed Asset Declaration
+        </a>
+     </div>
+    </div>
+    """
+    
     frappe.sendmail(
         recipients=recipients,
         subject=subject,

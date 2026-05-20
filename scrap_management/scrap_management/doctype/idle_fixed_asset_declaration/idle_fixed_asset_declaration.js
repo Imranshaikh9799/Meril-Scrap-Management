@@ -159,6 +159,8 @@ frappe.ui.form.on('Idle Fixed Asset Declaration', {
             "BMS - Plant & Machinery including engineering and utility - instruments and equipment",
             "Office Equipment other",
             "Furniture & Fixtures",
+            "Employee Welfare Equipment (HR)",
+            "Utility",
             "I.T assets including hardware and software",
             "Plant & Machinery including engineering and utility - instruments and equipment",
             "Vehicles"

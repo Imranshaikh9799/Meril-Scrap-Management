@@ -138,6 +138,8 @@ def update_approval_remarks(docname, remarks, action):
             "Approval Pending from Office Assessment Team": "Office Assessment Team",
             "Approval Pending from Office Assessment HOD": "Office Assessment HOD",
             "Approval Pending from F & A HOD": "F & A HOD",
+            "Approval Pending from Employee Welfare Equipment Assessment Team": "Employee Welfare Equipment Assessment Team",
+            "Approval Pending from Employee Welfare Equipment Assessment HOD": "Employee Welfare Equipment Assessment HOD",
             "Approval Pending from F & A Department": "F & A Department",
             "Approval Pending from R&D Assessment HOD": "R&D Assessment HOD",
             "Approval Pending from Assessment Team": "Assessment Team",
