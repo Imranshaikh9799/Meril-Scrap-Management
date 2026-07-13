@@ -274,4 +274,10 @@ scheduler_events = {
         ]
     }
 }
+permission_query_conditions = {
+    "Scrap Material Declaration": "scrap_management.scrap_management.doctype.scrap_material_declaration.scrap_material_declaration.get_permission_query_conditions"
+}
 
+has_permission = {
+    "Scrap Material Declaration": "scrap_management.scrap_management.doctype.scrap_material_declaration.scrap_material_declaration.has_permission"
+}

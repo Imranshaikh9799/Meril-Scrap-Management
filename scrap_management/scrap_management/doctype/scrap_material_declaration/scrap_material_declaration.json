@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "company_name",
+  "company_code",
   "date_addf",
   "department",
   "scrap_type",
@@ -32,6 +33,7 @@
   {
    "fieldname": "company_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company Name",
    "options": "Company Master",
    "reqd": 1,
@@ -170,13 +172,20 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Workflow remarks"
+  },
+  {
+   "fetch_from": "company_name.company_code",
+   "fieldname": "company_code",
+   "fieldtype": "Data",
+   "label": "Company Code",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-02 16:08:59.202421",
+ "modified": "2026-07-13 15:22:00.799482",
  "modified_by": "Administrator",
  "module": "Scrap Management",
  "name": "Scrap Material Declaration",

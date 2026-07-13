@@ -27,7 +27,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "asset_code.item_name",
+   "fetch_from": "asset_code.description",
    "fieldname": "asset_description",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -48,8 +48,8 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-03-12 14:39:46.499819",
- "modified_by": "Administrator",
+ "modified": "2026-06-03 11:57:52.312594",
+ "modified_by": "sankalpbendale2002@gmail.com",
  "module": "Scrap Management",
  "name": "Asset Table Add Row",
  "owner": "Administrator",

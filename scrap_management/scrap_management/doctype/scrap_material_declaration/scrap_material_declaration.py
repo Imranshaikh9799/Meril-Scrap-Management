@@ -266,3 +266,62 @@ def get_approval_details(docname):
             for row in doc.approval_details
         ]
     }
+# ======================================================
+# PERMISSION BASED ON COMPANY CODE ROLE
+# ======================================================
+import frappe
+
+
+def get_permission_query_conditions(user=None):
+    if not user:
+        user = frappe.session.user
+
+    roles = frappe.get_roles(user)
+
+    # Administrator & System Manager -> Show all
+    if user == "Administrator" or "System Manager" in roles:
+        return ""
+
+    # Get company codes that match the user's roles
+    matched_company_codes = frappe.get_all(
+        "Company Master",
+        filters={"company_code": ["in", roles]},
+        pluck="company_code",
+    )
+
+    # No matching company code role -> Show all
+    if not matched_company_codes:
+        return ""
+
+    company_codes_sql = ", ".join(
+        frappe.db.escape(code) for code in matched_company_codes
+    )
+
+    return (
+        f"`tabScrap Material Declaration`.`company_code` "
+        f"IN ({company_codes_sql})"
+    )
+
+
+def has_permission(doc, ptype="read", user=None):
+    if not user:
+        user = frappe.session.user
+
+    roles = frappe.get_roles(user)
+
+    # Administrator & System Manager -> Full access
+    if user == "Administrator" or "System Manager" in roles:
+        return True
+
+    # Get company codes that match the user's roles
+    matched_company_codes = frappe.get_all(
+        "Company Master",
+        filters={"company_code": ["in", roles]},
+        pluck="company_code",
+    )
+
+    # No matching company code role -> Full access
+    if not matched_company_codes:
+        return True
+
+    return doc.company_code in matched_company_codes
